@@ -88,12 +88,12 @@ for index, row in df_test.iterrows():
 
 df_test['guess'] = guess
 
-tocnost = 0
+accuracy = 0
 for index, row in df_test.iterrows():
     if row[dvar] == row['guess']:
-        tocnost+=1
+        accuracy += 1
 
-tocnost /= df_test.shape[0]
+accuracy /= df_test.shape[0]
 
 matrix = {}
 for cl in classifier:
@@ -109,5 +109,36 @@ for index, row in df_test.iterrows():
     else:
         matrix[real][pred] += 1
 
-pprint(matrix)
+tf_matrix = {}
+for cl in classifier:
+    tf_matrix[cl] = {
+        "tp": 0,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0
+    }
+
+for mkey in matrix.keys():
+    for key in matrix:
+        tp = 0
+        fp = 0
+        tn = 0
+        fn = 0
+        for skey in matrix[key]:
+            val = matrix[key][skey]
+            if mkey == key and key == skey:
+                tp += val
+            elif mkey == key and key != skey:
+                fp += val
+            elif mkey != key and key == skey:
+                tn += val
+            elif mkey != key and key != skey:
+                fn += val
+
+        tf_matrix[mkey]['tp'] += tp
+        tf_matrix[mkey]['fp'] += fp
+        tf_matrix[mkey]['tn'] += tn
+        tf_matrix[mkey]['fn'] += fn
+
+pprint(tf_matrix)
 
