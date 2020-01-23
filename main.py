@@ -89,12 +89,13 @@ for index, row in df_test.iterrows():
 df_test['guess'] = guess
 
 tocnost = 0
-
 for index, row in df_test.iterrows():
     if row[dvar] == row['guess']:
         tocnost+=1
 
-print(tocnost / df_test.shape[0])
+tocnost /= df_test.shape[0]
+
+
 
 
 
