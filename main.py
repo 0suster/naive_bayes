@@ -41,7 +41,6 @@ classifier = col_vals[dvar]
 :var classifier = je array vseh edinstvenih vrednosti klasifikacijskega stolpca
 """
 
-
 col_vals.pop(dvar)
 
 for cl in classifier:
@@ -50,7 +49,6 @@ for cl in classifier:
             sort = df_learn.loc[df_learn[dvar] == cl]
             sort1 = sort.loc[sort[key] == val]
             model[cl][key][val] = (sort1.shape[0]) / (model[cl]['count'])
-
 
 val_probs = {}
 """
@@ -61,8 +59,7 @@ for col in col_vals:
     sums = df_learn[col].value_counts()
     val_probs[col] = {}
     for index in sums.index:
-        val_probs[col][index] = sums[index]/total
-
+        val_probs[col][index] = sums[index] / total
 
 df_test = pd.read_csv('data_sets/car_testna.csv')
 comp_class = df_test[dvar]
@@ -74,19 +71,30 @@ comp_class = df_test[dvar]
 for key in model.keys():
     model[key]['count'] /= total
 
-print(df_test.head(5))
-
+guess = []
 for index, row in df_test.iterrows():
     select = []
-    in_prob = 1
     for clss in classifier:
-        for col in df_test.columns:
-            if col != dvar:
-                value = row[col]
-                in_prob *= model[clss][col][value]
-
-        in_prob /= model[clss]['count']
+        in_prob = 1
+        for col in col_vals:
+            value = row[col]
+            in_prob *= model[clss][col][value]
         select.append(in_prob)
+
     for i in range(len(select)):
         if select[i] == max(select):
-            row[dvar] = classifier[i]
+            guess.append(classifier[i])
+            break
+
+df_test['guess'] = guess
+
+tocnost = 0
+
+for index, row in df_test.iterrows():
+    if row[dvar] == row['guess']:
+        tocnost+=1
+
+print(tocnost / df_test.shape[0])
+
+
+
