@@ -95,7 +95,19 @@ for index, row in df_test.iterrows():
 
 tocnost /= df_test.shape[0]
 
+matrix = {}
+for cl in classifier:
+    matrix[cl] = {}
+    for cl1 in classifier:
+        matrix[cl][cl1] = 0
 
+for index, row in df_test.iterrows():
+    real = row[dvar]
+    pred = row['guess']
+    if real == pred:
+        matrix[real][real] += 1
+    else:
+        matrix[real][pred] += 1
 
-
+pprint(matrix)
 
