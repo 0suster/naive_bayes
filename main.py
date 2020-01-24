@@ -55,11 +55,13 @@ val_probs = {}
 :var val_probs: splosna verjetnost za vsako mozno vrednost v vaskem stolpcu
 """
 
+
 for col in col_vals:
     sums = df_learn[col].value_counts()
     val_probs[col] = {}
     for index in sums.index:
         val_probs[col][index] = sums[index] / total
+
 
 df_test = pd.read_csv('data_sets/car_testna.csv')
 comp_class = df_test[dvar]
@@ -67,19 +69,23 @@ comp_class = df_test[dvar]
 :var df_test: dataframe testnega csv-ja
 :var comp_class: klasifikacije testnega data-seta pred napovedjo
 """
-
 for key in model.keys():
     model[key]['count'] /= total
+
 
 guess = []
 for index, row in df_test.iterrows():
     select = []
     for clss in classifier:
         in_prob = 1
+        norm = 1
         for col in col_vals:
             value = row[col]
             in_prob *= model[clss][col][value]
-        select.append(in_prob)
+            norm *= val_probs[col][value]
+
+        select.append(in_prob/norm)
+
 
     for i in range(len(select)):
         if select[i] == max(select):
@@ -140,5 +146,13 @@ for mkey in matrix.keys():
         tf_matrix[mkey]['tn'] += tn
         tf_matrix[mkey]['fn'] += fn
 
-pprint(tf_matrix)
+def izpis():
+    pprint(model)
+    print()
+    pprint(matrix)
+    print()
+    pprint(tf_matrix)
+    print()
+    print(accuracy*100)
 
+izpis()
