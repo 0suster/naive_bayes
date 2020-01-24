@@ -99,8 +99,8 @@ for index, row in df_test.iterrows():
     if row[dvar] == row['guess']:
         accuracy += 1
 
-accuracy /= df_test.shape[0]
 
+accuracy /= df_test.shape[0]
 matrix = {}
 for cl in classifier:
     matrix[cl] = {}
@@ -146,12 +146,45 @@ for mkey in matrix.keys():
         tf_matrix[mkey]['tn'] += tn
         tf_matrix[mkey]['fn'] += fn
 
+metrike = {
+    "recall" : 0,
+    "prec" : 0,
+    "fscore" : 0
+}
+
+for tf in tf_matrix:
+    val = tf_matrix[tf]
+    recall = val['tp']/(val['tp']+val['fn'])
+    prec = val['tp']/(val['tp']+val['fp'])
+    fscore = 2 * (recall * prec) / (recall+prec)
+    metrike[tf] = {
+        "recall" : recall,
+        "prec" : prec,
+        "fscore" : fscore
+    }
+
+srecall = 1
+sprec = 1
+sfscore = 1
+for cl in model:
+    srecall += model[cl]["count"] * metrike[cl]["recall"]
+    sprec += model[cl]["count"] * metrike[cl]["prec"]
+    sfscore += model[cl]["count"] * metrike[cl]["fscore"]
+
+metrike["recall"] = srecall
+metrike["prec"] = sprec
+metrike["fscore"] = sfscore
+
+
+
 def izpis():
     pprint(model)
     print()
     pprint(matrix)
     print()
     pprint(tf_matrix)
+    print()
+    pprint(metrike)
     print()
     print(accuracy*100)
 
