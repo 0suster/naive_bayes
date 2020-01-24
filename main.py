@@ -154,9 +154,9 @@ metrike = {
 
 for tf in tf_matrix:
     val = tf_matrix[tf]
-    recall = val['tp']/(val['tp']+val['fn'])
-    prec = val['tp']/(val['tp']+val['fp'])
-    fscore = 2 * (recall * prec) / (recall+prec)
+    recall = val['tp']/((val['tp']+val['fn']))
+    prec = val['tp']/((val['tp']+val['fp']))
+    fscore = 2 * (recall * prec) / ((recall+prec))
     metrike[tf] = {
         "recall" : recall,
         "prec" : prec,
@@ -167,9 +167,9 @@ srecall = 1
 sprec = 1
 sfscore = 1
 for cl in model:
-    srecall += model[cl]["count"] * metrike[cl]["recall"]
-    sprec += model[cl]["count"] * metrike[cl]["prec"]
-    sfscore += model[cl]["count"] * metrike[cl]["fscore"]
+    srecall += (model[cl]["count"] * metrike[cl]["recall"])
+    sprec += (model[cl]["count"] * metrike[cl]["prec"])
+    sfscore += (model[cl]["count"] * metrike[cl]["fscore"])
 
 metrike["recall"] = srecall
 metrike["prec"] = sprec
@@ -178,14 +178,10 @@ metrike["fscore"] = sfscore
 
 
 def izpis():
-    pprint(model)
-    print()
+    # pprint(model)
+    # print()
     pprint(matrix)
-    print()
-    pprint(tf_matrix)
-    print()
-    pprint(metrike)
-    print()
-    print(accuracy*100)
+    # print()
+    # pprint(tf_matrix)
 
 izpis()
