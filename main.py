@@ -163,9 +163,9 @@ for tf in tf_matrix:
         "fscore" : fscore
     }
 
-srecall = 1
-sprec = 1
-sfscore = 1
+srecall = 0
+sprec = 0
+sfscore = 0
 for cl in model:
     srecall += (model[cl]["count"] * metrike[cl]["recall"])
     sprec += (model[cl]["count"] * metrike[cl]["prec"])
@@ -178,10 +178,11 @@ metrike["fscore"] = sfscore
 
 
 def izpis():
-    # pprint(model)
-    # print()
+    #pprint(model)
+    print()
     pprint(matrix)
-    # print()
-    # pprint(tf_matrix)
+    print()
+    pprint(tf_matrix)
+    pprint(metrike)
 
 izpis()
